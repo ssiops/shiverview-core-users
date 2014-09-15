@@ -102,6 +102,11 @@ angular.module('shiverview')
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
     });
   };
+  $scope.openFileSelect = function () {
+    var input = document.getElementById('file-input');
+    var event = new MouseEvent('click', {'view': window, 'bubbles': true, 'calcelable': true});
+    input.dispatchEvent(event);
+  };
   $scope.fetch();
 }])
 .controller('userSignoutCtrl', ['$http', '$location', '$rootScope', function ($http, $location, $rootScope) {
