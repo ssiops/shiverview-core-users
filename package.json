@@ -1,0 +1,22 @@
+{
+  "name": "shiverview-core-users",
+  "version": "0.1.0",
+  "description": "User module for Project Shiverview.",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ssiops/shiverview-core-users.git"
+  },
+  "author": "akasfei",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ssiops/shiverview-core-users/issues"
+  },
+  "homepage": "https://github.com/ssiops/shiverview-core-users",
+  "dependencies": {
+    "q": "^1.0.1"
+  }
+}

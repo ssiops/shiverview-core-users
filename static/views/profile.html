@@ -1,0 +1,21 @@
+<div class="container top-spaced">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="card center-aligned">
+        <img ng-show="showProfileImg" ng-src="{{user.profileimg || '/users/images/default.svg'}}" class="cover" src="/users/images/default.svg" alt="Your profile image" />
+        <div ng-show="!showProfileImg" ng-file-drop="upload($files)" ng-file-drag-over-class="">
+          Drop file here, or
+          <input type="file" ng-file-select="upload($files)">
+        </div>
+        <h1>{{user.name}}</h1>
+        <h6><a href ng-click="toggleUploader()">Change Profile Image</a></h6>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <h4>Email</h4>
+          <p>{{user.email}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

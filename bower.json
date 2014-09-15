@@ -1,0 +1,14 @@
+{
+  "name": "shiverview-core-users",
+  "main": "index.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ssiops/shiverview-core-users",
+  "authors": [
+    "akasfei <akasfei@gmail.com>"
+  ],
+  "description": "User module for Project Shiverview.",
+  "license": "MIT",
+  "dependencies": {
+    "ng-file-upload": "~1.6.0"
+  }
+}

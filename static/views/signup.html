@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Create your Shiverview account</h1>
+    </div>
+    <div class="col-md-5 pull-right">
+      <div class="card">
+        <form class="card-content" ng-submit="submit($event)">
+          <div class="form-group">
+            <label for="username_input">Username</label>
+            <input type="text" class="form-control" id="username_input" ng-model="form.username">
+            <p class="help-block" ng-if="error.username">{{error.username}}</p>
+          </div>
+          <div class="form-group">
+            <label for="email_input">Email</label>
+            <input type="email" class="form-control" id="email_input" ng-model="form.email">
+            <p class="help-block" ng-if="error.email">{{error.email}}</p>
+          </div>
+          <div class="form-group">
+            <label for="password_input">Password</label>
+            <input type="password" class="form-control" id="password_input" ng-model="form.password">
+            <p class="help-block" ng-if="error.password">{{error.password}}</p>
+          </div>
+          <div class="form-group">
+            <label for="password_input_confirm">Confirm Password</label>
+            <input type="password" class="form-control" id="password_input_confirm" ng-model="form.passwordConfirm">
+            <p class="help-block" ng-if="error.passwordConfirm">{{error.passwordConfirm}}</p>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign up</button>
+            <a href="javascript:void(0)" class="btn btn-default btn-lg btn-block">Sign in with Google</a>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <h1>One account, All Shivering views.</h1>
+    </div>
+  </div>
+</div>

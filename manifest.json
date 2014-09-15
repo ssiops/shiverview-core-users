@@ -1,0 +1,30 @@
+{
+  "name": "shiverview-core-users",
+  "desc": "User module for Project Shiverview.",
+  "path": "/users",
+  "static": "static",
+  "ui": {
+    "icon": "favicon.png",
+    "navName": "SV>>USR>",
+    "drawerName": "SV>>USR>",
+    "index": 1,
+    "views": {
+      "/signin": {"scope": "everyone", "title": "Sign in", "url": "/views/signin.html", "ctrl": "userSigninCtrl", "exclusive": true},
+      "/signup": {"scope": "everyone", "title": "Sign up", "url": "/views/signup.html", "ctrl": "userSignupCtrl", "exclusive": true},
+      "/profile": {"scope": "users", "title": "Profile", "url": "/views/profile.html", "ctrl": "userProfileCtrl"},
+      "/signout": {"scope": "users", "title": "Logout", "url": "/views/signin.html", "ctrl": "userSignoutCtrl"},
+      "/sudo": {"url": "/views/profile.html", "ctrl": "userSudoCtrl"}
+    },
+    "position": "right",
+    "ngmod": ["angularFileUpload"],
+    "scripts": "js/controllers.js"
+  },
+  "privileges": {
+    "database": "shiverview",
+    "manager": true,
+    "log": true
+  },
+  "dependencies": {
+    "shiverview-core-ui": "*"
+  }
+}
