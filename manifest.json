@@ -17,7 +17,7 @@
     },
     "position": "right",
     "ngmod": ["angularFileUpload"],
-    "scripts": "js/controllers.js"
+    "scripts": ["js/controllers.js", "js/service.js"]
   },
   "privileges": {
     "database": "shiverview",

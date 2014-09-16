@@ -1,37 +1,44 @@
 (function (angular) {
 angular.module('shiverview')
-.controller('userSigninCtrl', ['$scope', '$http', '$rootScope', '$location', function ($scope, $http, $rootScope, $location) {
+.controller('userSigninCtrl', ['$scope', '$http', '$rootScope', '$location', 'user', function ($scope, $http, $rootScope, $location, user) {
+  var u = user.get();
+  if (typeof u !== 'undefined') {
+    if (typeof u.then === 'function')
+      u.success(function () { $location.path('/users/profile') });
+    else
+      $location.path('/users/profile');
+  }
   $scope.submit = function (e) {
     if (e) e.preventDefault();
     if (typeof $scope.username === 'undefined' || typeof $scope.password === 'undefined')
       return;
-    var payload = {
-      username: $scope.username,
-      password: $scope.password
-    };
-    $http({
-      url: '/users/signin',
-      data: payload,
-      method: 'post'
-    })
+    user.auth($scope.username, $scope.password)
     .success(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
-      $rootScope.$broadcast('userStatusUpdate');
-      $location.url('/users/profile');
+      user.update()
+      .success(function (err) {
+        $location.url('/users/profile');
+      });
     })
     .error(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
     });
   };
 }])
-.controller('userSignupCtrl', ['$scope', '$http', '$rootScope', function ($scope, $http, $rootScope) {
+.controller('userSignupCtrl', ['$scope', '$http', '$rootScope', '$location', 'user', function ($scope, $http, $rootScope, $location, user) {
+  var u = user.get();
+  if (typeof u !== 'undefined') {
+    if (typeof u.then === 'function')
+      u.success(function () { $location.path('/users/profile') });
+    else
+      $location.path('/users/profile');
+  }
   $scope.submit = function (e) {
     if (e) e.preventDefault();
-    if (typeof $scope.form.username !== 'undefined' || typeof $scope.form.password !== 'undefined' || typeof $scope.form.email !== 'undefined')
+    if (typeof $scope.form.username === 'undefined' || typeof $scope.form.password === 'undefined' || typeof $scope.form.email === 'undefined')
       return;
-    if ($scope.form.password !== $scope.form.passwordConfirm)
+    if ($scope.form.password !== $scope.passwordConfirm)
       return $rootScope.$broadcast('warningMessage', 'Your passwords do not match.');
-    delete $scope.form.passwordConfirm;
     $http({
       url: '/users/profile/' + $scope.form.username,
       data: $scope.form,
@@ -39,29 +46,23 @@ angular.module('shiverview')
     })
     .success(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
-      $rootScope.$broadcast('userStatusUpdate');
-      $location.url('/users/profile');
+      user.update()
+      .success(function (err) {
+        $location.url('/users/profile');
+      });
     })
     .error(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
     });
   };
 }])
-.controller('userProfileCtrl', ['$scope', '$http', '$rootScope', '$location', '$upload', function ($scope, $http, $rootScope, $location, $upload) {
+.controller('userProfileCtrl', ['$scope', '$http', '$rootScope', '$location', '$upload', 'user', function ($scope, $http, $rootScope, $location, $upload, user) {
   $scope.showProfileImg = true;
-  $scope.fetch = function () {
-    $http({
-      url: '/users/profile',
-      method: 'get'
-    })
-    .success(function (user) {
-      $scope.user = user;
-    })
-    .error(function (err, status) {
-      if (status === 404)
-        $location.url('/users/signin');
-    });
-  };
+  $scope.user = user.get();
+  if (typeof $scope.user === 'undefined')
+    $location.path('/users/signin');
+  if (typeof $scope.user.then === 'function')
+    $scope.user.success(function () { $scope.user = user.get() }).error(function () { $location.path('/users/signin'); });
   $scope.toggleUploader = function () {
     $scope.showProfileImg = !$scope.showProfileImg;
   };
@@ -88,15 +89,10 @@ angular.module('shiverview')
       email: $scope.email,
       profileimg: $scope.path
     };
-    $http({
-      url: '/users/profile/' + $scope.user.name,
-      data: payload,
-      method: 'post'
-    })
+    user.set(payload)
     .success(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
       $rootScope.$broadcast('successMessage', 'Your profile has been saved.');
-      $scope.profileimg = $scope.path;
     })
     .error(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
@@ -107,11 +103,9 @@ angular.module('shiverview')
     var event = new MouseEvent('click', {'view': window, 'bubbles': true, 'calcelable': true});
     input.dispatchEvent(event);
   };
-  $scope.fetch();
 }])
-.controller('userSignoutCtrl', ['$http', '$location', '$rootScope', function ($http, $location, $rootScope) {
-  $http({url: '/users/signout', method: 'get'})
-  .success(function () { $rootScope.$broadcast('userStatusUpdate'); })
+.controller('userSignoutCtrl', ['$location', 'user', function ($location, user) {
+  user.signout();
   $location.url('/users/signin');
 }]);
 })(window.angular);
