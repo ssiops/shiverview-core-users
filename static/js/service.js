@@ -1,6 +1,6 @@
 (function (angular) {
 angular.module('shiverview')
-.factory('user', ['$http', '$rootScope', function ($http, $rootScope) {
+.factory('user', ['$http', '$rootScope', '$location', function ($http, $rootScope, $location) {
   var user;
   var init = false;
   var service = {
@@ -24,13 +24,15 @@ angular.module('shiverview')
             user[prop] = opt[prop];
       });
     },
-    auth: function (id, password) {
+    auth: function (id, password, sudo) {
       var emailPatt = /[a-zA-z0-9]+@[a-zA-z0-9]+\.[a-zA-z]+/;
       var payload;
       if (emailPatt.test(id))
         payload = {email: id, password: password};
       else
         payload = {username: id, password: password};
+      if (typeof sudo !== 'undefined')
+        payload.sudo = true;
       return $http({
         url: '/users/signin',
         data: payload,
@@ -64,6 +66,18 @@ angular.module('shiverview')
       .success(function () {
         $rootScope.$broadcast('userStatusUpdate');
       });
+    },
+    delete: function (name) {
+      return $http({url: '/users/profile/' + name, method: 'delete'})
+      .success(function () {
+        user = undefined;
+        $rootScope.$broadcast('userStatusUpdate');
+      });
+    },
+    sudo: function () {
+      var redirect = $location.path();
+      $location.path('/users/sudo');
+      $location.search('redirect', redirect);
     }
   };
   return service;

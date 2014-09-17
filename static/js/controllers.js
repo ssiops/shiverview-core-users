@@ -61,7 +61,7 @@ angular.module('shiverview')
   $scope.user = user.get();
   if (typeof $scope.user === 'undefined')
     $location.path('/users/signin');
-  if (typeof $scope.user.then === 'function')
+  else if (typeof $scope.user.then === 'function')
     $scope.user.success(function () { $scope.user = user.get() }).error(function () { $location.path('/users/signin'); });
   $scope.toggleUploader = function () {
     $scope.showProfileImg = !$scope.showProfileImg;
@@ -100,9 +100,41 @@ angular.module('shiverview')
     var event = new MouseEvent('click', {'view': window, 'bubbles': true, 'calcelable': true});
     input.dispatchEvent(event);
   };
+  $scope.deleteAccount = function (e) {
+    if (e) e.preventDefault();
+    user.delete($scope.delPayload.username)
+    .success(function () {
+      $location.path('/');
+    })
+    .error(function (err) {
+      if (err && err.message === 'Sudo required.')
+        user.sudo();
+      else
+        $rootScope.$broadcast('errorMessage', err.message);
+    });
+  };
 }])
 .controller('userSignoutCtrl', ['$location', 'user', function ($location, user) {
   user.signout();
   $location.url('/users/signin');
+}])
+.controller('userSudoCtrl', ['$scope', '$location', '$routeParams', '$rootScope', 'user', function ($scope, $location, $params, $rootScope, user) {
+  $scope.user = user.get();
+  if (typeof $scope.user === 'undefined' || typeof $scope.user.name === 'undefined')
+    $location.path('/users/signin');
+  $scope.submit = function (e) {
+    if (e) e.preventDefault();
+    user.auth($scope.user.name, $scope.password, true)
+    .success(function () {
+      $rootScope.$broadcast('warningMessage', 'You entered sudo mode.');
+      if ($params.redirect)
+        $location.url($params.redirect);
+      else
+        $location.url('/users/profile');
+    })
+    .error(function (err) {
+      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    });
+  };
 }]);
 })(window.angular);

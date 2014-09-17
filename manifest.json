@@ -13,7 +13,7 @@
       "/signup": {"scope": "everyone", "title": "Sign up", "url": "/views/signup.html", "ctrl": "userSignupCtrl", "exclusive": true},
       "/profile": {"scope": "users", "title": "Profile", "url": "/views/profile.html", "ctrl": "userProfileCtrl"},
       "/signout": {"scope": "users", "title": "Logout", "url": "/views/signin.html", "ctrl": "userSignoutCtrl"},
-      "/sudo": {"url": "/views/profile.html", "ctrl": "userSudoCtrl"}
+      "/sudo": {"url": "/views/sudo.html", "ctrl": "userSudoCtrl"}
     },
     "position": "right",
     "ngmod": ["angularFileUpload"],

@@ -10,11 +10,16 @@ module.exports = [
       var user = new User({name: req.body.username}, req.body.password);
       user.auth(srv.db)
       .then(function () {
-        var log = new srv.log(req, 'User login.', 'AUTH_SUCCESS');
-        log.store();
         req.session.user = user;
-        if (req.body.sudo)
+        if (req.body.sudo) {
           req.session.sudo = new Date().getTime();
+          var log = new srv.log(req, 'User entered sudo mode.', 'AUTH_SUCCESS_SUDO');
+          log.store();
+        }
+        else {
+          var log = new srv.log(req, 'User sign in.', 'AUTH_SUCCESS');
+          log.store();
+        }
         return res.send();
       }, function (err) {
         if (err.message === 'Invalid username or password.') {

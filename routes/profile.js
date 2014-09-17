@@ -129,15 +129,17 @@ module.exports = [
     handler: function (req, res, srv, next) {
       if (typeof req.session.user === 'undefined')
         return res.status(401).send();
-      if (req.session.user.name !== req.params.name || !req.session.user.admin)
+      if (req.session.user.name !== req.params.name && !req.session.user.admin)
         return res.status(403).send();
       if (typeof req.session.sudo === 'undefined' || new Date().getTime() - req.session.sudo > 60 * 60 * 1000)
-        return res.send(new srv.err('Sudo required.'));
-      srv.db.remove({name: req.session.user.name}, 'users', {})
+        return res.status(401).send(new srv.err('Sudo required.'));
+      srv.db.remove({name: req.session.user.name}, 'users', {single: true, fullResult: true})
       .then(function (doc) {
-        srv.db.insert(doc, 'deleted-users', {});
+        srv.db.insert(doc, 'deleted_users', {});
         var log = new srv.log(req, 'User ' + req.session.user.name + ' deleted.', 'USER_DELETED');
         log.store();
+        delete req.session.user;
+        delete req.session.sudo;
         res.send();
       }, function (err) {
         next(err);
