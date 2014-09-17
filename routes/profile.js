@@ -29,16 +29,16 @@ module.exports = [
     url: '/profile/:name',
     method: 'put',
     handler: function (req, res, srv, next) {
-      if (req.params.name && (req.params.name.length < 2 || req.params.name.length > 16 || req.params.name.search(/^[a-zA-Z0-9\-\_\.]/) < 0)) {
-        res.send(new Error('Your username must be 2~16 characters long with only English letters, numbers, "-", "_" and ".".'));
+      if (req.params.name && !/^[a-zA-Z0-9\-\_\.]{2,16}$/.test(req.params.name)) {
+        res.send(new srv.err('Your username must be 2~16 characters long with only English letters, numbers, "-", "_" and ".".'));
         return;
       }
       if (req.body.password && (req.body.password.length < 6 || req.body.password.length > 20)) {
-        res.send(new Error('Your password must be 6~20 charaters long.'));
+        res.send(new srv.err('Your password must be 6~20 charaters long.'));
         return;
       }
-      if (req.body.email && (req.body.email.length < 1 || req.body.email.search(/[a-zA-z0-9]+@[a-zA-z0-9]+\.[a-zA-z]+/) < 0)) {
-        res.send(new Error('Your email address is not valid.'));
+      if (req.body.email && !/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/.test(req.body.email)) {
+        res.send(new srv.err('Your email address is not valid.'));
         return;
       }
       req.body.name = req.params.name;
@@ -74,7 +74,7 @@ module.exports = [
             srv.db.update({name: req.session.user.name}, {$set: {password: user.hash(req.body.password)}}, 'users', {})
             .then(function () { d.resolve() }, function (err) { d.reject(err) });
           }, function (err) {
-            d.reject(err);
+            d.reject(new srv.err(err));
           });
         } else
           d.resolve();
@@ -88,7 +88,7 @@ module.exports = [
         if (req.body.profileimg)
           updates.profileimg = req.body.profileimg;
         if (updates.email && updates.email.search(/[a-zA-z0-9]+@[a-zA-z0-9]+\.[a-zA-z]+/) < 0)
-          d.reject(new Error('Your email address is not valid.'));
+          d.reject(new srv.err('Your email address is not valid.'));
         else {
           srv.db.update({name: req.session.user.name}, {$set: updates}, 'users', {})
           .then(function () {
@@ -125,7 +125,7 @@ module.exports = [
       if (req.session.user.name !== req.params.name || !req.session.user.admin)
         return res.status(403).send();
       if (typeof req.session.sudo === 'undefined' || new Date().getTime() - req.session.sudo > 60 * 60 * 1000)
-        return res.send(new Error('Sudo required.'));
+        return res.send(new srv.err('Sudo required.'));
       srv.db.remove({name: req.session.user.name}, 'users', {})
       .then(function (doc) {
         srv.db.insert(doc, 'deleted-users', {});

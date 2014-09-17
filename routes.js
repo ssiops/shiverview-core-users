@@ -20,7 +20,7 @@ module.exports = [
         if (err.message === 'Invalid username or password.') {
           var log = new srv.log(req, 'User auth failed.', 'AUTH_FAIL');
           log.store();
-          return res.send(err);
+          return res.send(new srv.err(err));
         } else {
           next(err);
         }

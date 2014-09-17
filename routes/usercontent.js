@@ -51,7 +51,7 @@ module.exports = [
       if (typeof req.session.user.admin === 'undefined')
         return res.status(403).send();
       if (typeof req.session.sudo === 'undefined' || new Date().getTime() - req.session.sudo > 60 * 60 * 1000)
-        return res.send(new Error('Sudo required.'));
+        return res.send(new srv.err('Sudo required.'));
       var path = '/usercontent/' + req.params.appname + '/' + req.params.file;
       fs.unlink(process.cwd() + path, function (err) {
         if (err) return next(err);

@@ -22,7 +22,8 @@
   "privileges": {
     "database": "shiverview",
     "manager": true,
-    "log": true
+    "log": true,
+    "err": true
   },
   "dependencies": {
     "shiverview-core-ui": "*"
