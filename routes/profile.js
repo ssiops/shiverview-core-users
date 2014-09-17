@@ -87,15 +87,21 @@ module.exports = [
           updates.email = req.body.email;
         if (req.body.profileimg)
           updates.profileimg = req.body.profileimg;
-        if (updates.email && updates.email.search(/[a-zA-z0-9]+@[a-zA-z0-9]+\.[a-zA-z]+/) < 0)
+        if (updates.email && !/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/.test(req.body.email))
           d.reject(new srv.err('Your email address is not valid.'));
         else {
-          srv.db.update({name: req.session.user.name}, {$set: updates}, 'users', {})
-          .then(function () {
-            for (var prop in updates)
-              req.session.user[prop] = updates[prop];
+          var prop;
+          for (prop in updates) {}
+          if (typeof prop === 'undefined')
             d.resolve();
-          }, function (err) { d.reject(err) });
+          else {
+            srv.db.update({name: req.session.user.name}, {$set: updates}, 'users', {})
+            .then(function () {
+              for (var prop in updates)
+                req.session.user[prop] = updates[prop];
+              d.resolve();
+            }, function (err) { d.reject(err) });
+          }
         }
         return d.promise;
       };
@@ -104,6 +110,7 @@ module.exports = [
         return updateProfile();
       }, function (err) {
         if (err.message === 'Invalid username or password.') {
+          err.message = 'Invalid old password.'
           var log = new srv.log(req, 'User passwords do not match.', 'AUTH_PASSWORD_UNMATCH');
           log.store();
           res.send(err);

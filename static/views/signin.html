@@ -2,16 +2,21 @@
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
       <div class="card">
-        <form class="card-content center-aligned" ng-submit="submit($event)">
+        <form class="card-content center-aligned" name="signinForm" ng-submit="submit($event)">
           <h1>Sign In</h1>
-          <div class="form-group">
-            <input type="text" class="form-control" id="username_input" placeholder="Username" ng-model="username">
+          <div class="form-group" ng-class="{'has-error': !signinForm.username.$valid && usernameBlurred}">
+            <input type="text" class="form-control input-lg" name="username" id="username_input" placeholder="Username" ng-model="username" required ng-minlength="2" ng-maxlength="16" ng-pattern="/^[a-zA-Z0-9\-\_\.]/" ng-blur="usernameBlurred = true">
+            <span ng-show="signinForm.username.$error.required && usernameBlurred" class="help-block">Required.</span>
+            <span ng-show="signinForm.username.$error.pattern && usernameBlurred" class="help-block">Your username contains only English letters, numbers, "-", "_" and ".".</span>
+            <span ng-show="(signinForm.username.$error.minlength || signinForm.username.$error.maxlength) && usernameBlurred" class="help-block">Your username is 2~16 characters long.</span>
+          </div>
+          <div class="form-group" ng-class="{'has-error': !signinForm.password.$valid && passwordBlurred}">
+            <input type="password" class="form-control input-lg" name="password" id="password_input" placeholder="Password" ng-model="password" required ng-minlength="6" ng-maxlength="20" ng-blur="passwordBlurred = true">
+            <span ng-show="signinForm.password.$error.required && passwordBlurred" class="help-block">Required.</span>
+            <span ng-show="(signinForm.password.$error.minlength || signinForm.password.$error.maxlength) && passwordBlurred" class="help-block">Your password is 6~20 characters long.</span>
           </div>
           <div class="form-group">
-            <input type="password" class="form-control" id="password_input" placeholder="Password" ng-model="password">
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" ng-class="{disabled: !signinForm.$valid}">Sign in</button>
             <a href="javascript:void(0)" class="btn btn-default btn-lg btn-block">Sign in with Google</a>
           </div>
         </form>

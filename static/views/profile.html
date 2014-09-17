@@ -1,6 +1,6 @@
 <div class="container top-spaced">
   <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-4 col-md-offset-4">
       <div class="card center-aligned">
         <img ng-show="showProfileImg" ng-src="{{user.profileimg || '/users/images/default.svg'}}" class="cover" src="/users/images/default.svg" alt="Your profile image" />
         <div class="file-drop-zone" ng-show="!showProfileImg" ng-file-drop="upload($files)" ng-file-drag-over-class="active" ng-click="openFileSelect()">
@@ -12,11 +12,63 @@
         <h1>{{user.name}}</h1>
         <h6><a href ng-click="toggleUploader()">Change Profile Image</a></h6>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
       <div class="card">
-        <div class="card-content">
-          <h4>Email</h4>
-          <p>{{user.email}}</p>
-        </div>
+        <h3 class="cover cover-info">Profile</h3>
+        <form class="card-content" name="infoForm" ng-submit="save(infoPayload, $event)">
+          <div class="form-group" ng-class="{'has-error': !infoForm.email.$valid && emailBlurred}">
+            <label for="password_input_old">Email</label>
+            <p ng-show="!editEmail">{{user.email}} <button type="button" class="btn btn-link btn-xs" ng-click="editEmail=!editEmail;infoPayload.email=user.email"><span class="glyphicon glyphicon-pencil"></span></button></p>
+            <input type="email" class="form-control" name="email" id="email_input" ng-show="editEmail" ng-model="infoPayload.email" required ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/" ng-blur="emailBlurred = true">
+            <span ng-show="!infoForm.email.$valid && emailBlurred && editEmail" class="help-block">Invalid email address.</span>
+          </div>
+          <p ng-show="editEmail"><button type="submit" class="btn btn-primary" ng-class="{disabled: !infoForm.$valid || infoPayload.email === user.email}">Save</button> <button type="button" class="btn btn-default" ng-click="editEmail=false">Cancel</button></p>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <h3 class="cover cover-warning">Change password</h3>
+        <form class="card-content" name="passwordForm" ng-submit="save(passwordPayload, $event)">
+          <div class="form-group" ng-class="{'has-error': !passwordForm.oldPassword.$valid && oldPasswordBlurred}">
+            <label for="password_input_old">Old Password</label>
+            <input type="password" class="form-control" name="oldPassword" id="password_input_old" ng-model="passwordPayload.passwordOld" required ng-minlength="6" ng-maxlength="20" ng-blur="oldPasswordBlurred = true">
+            <span ng-show="passwordForm.oldPassword.$error.required && oldPasswordBlurred" class="help-block">Required.</span>
+            <span ng-show="(passwordForm.oldPassword.$error.minlength || passwordForm.oldPassword.$error.maxlength) && oldPasswordBlurred" class="help-block">Your password is 6~20 characters long.</span>
+          </div>
+          <div class="form-group" ng-class="{'has-error': !passwordForm.password.$valid && passwordBlurred}">
+            <label for="password_input">New Password</label>
+            <input type="password" class="form-control" name="password" id="password_input" ng-model="passwordPayload.password" required ng-minlength="6" ng-maxlength="20" ng-blur="passwordBlurred = true">
+            <span ng-show="passwordForm.password.$error.required && passwordBlurred" class="help-block">Required.</span>
+            <span ng-show="(passwordForm.password.$error.minlength || passwordForm.password.$error.maxlength) && passwordBlurred" class="help-block">Your password is 6~20 characters long.</span>
+          </div>
+          <div class="form-group" ng-class="{'has-error': passwordPayload.password !== passwordConfirm && passwordConfirmFocused}">
+            <label for="password_input_confirm">Confirm Password</label>
+            <input type="password" class="form-control" name="passwordConfirm" id="password_input_confirm" ng-model="passwordConfirm" ng-focus="passwordConfirmFocused = true">
+            <span ng-show="passwordPayload.password !== passwordConfirm && passwordConfirmFocused" class="help-block">Your passwords don't match.</span>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block" ng-class="{disabled: !passwordForm.$valid || passwordPayload.password !== passwordConfirm}">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <h3 class="cover cover-danger">Delete account</h3>
+        <form class="card-content" name="deleteAccountForm" ng-submit="deleteAccount($event)">
+          <div class="form-group" ng-class="{'has-error': !deleteAccountForm.username.$valid && delBlurred}">
+            <label for="username_input">Enter your user name to confirm.</label>
+            <input type="text" class="form-control" name="username" id="username_input" ng-model="delPayload.username" required ng-minlength="2" ng-maxlength="16" ng-pattern="/^[a-zA-Z0-9\-\_\.]/" ng-blur="delBlurred = true">
+            <span class="help-block"><b>WARNING!</b> Once you delete an account, it's never going back. Please be certain.</span>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-danger btn-block" ng-class="{disabled: delPayload.username !== user.name}">DELETE ACCOUNT</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

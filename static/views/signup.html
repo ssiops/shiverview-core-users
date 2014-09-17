@@ -5,29 +5,32 @@
     </div>
     <div class="col-md-5 pull-right">
       <div class="card">
-        <form class="card-content" ng-submit="submit($event)">
-          <div class="form-group">
+        <form class="card-content" name="signupForm" ng-submit="submit($event)">
+          <div class="form-group" ng-class="{'has-error': !signupForm.username.$valid && usernameBlurred}">
             <label for="username_input">Username</label>
-            <input type="text" class="form-control" id="username_input" ng-model="form.username">
-            <p class="help-block" ng-if="error.username">{{error.username}}</p>
+            <input type="text" class="form-control" name="username" id="username_input" ng-model="form.username" required ng-minlength="2" ng-maxlength="16" ng-pattern="/^[a-zA-Z0-9\-\_\.]/" ng-blur="usernameBlurred = true">
+            <span ng-show="signupForm.username.$error.required && usernameBlurred" class="help-block">Required.</span>
+            <span ng-show="signupForm.username.$error.pattern && usernameBlurred" class="help-block">Username should contain only English letters, numbers, "-", "_" and ".".</span>
+            <span ng-show="(signupForm.username.$error.minlength || signupForm.username.$error.maxlength) && usernameBlurred" class="help-block">Username is 2~16 characters long.</span>
           </div>
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error': !signupForm.email.$valid && emailBlurred}">
             <label for="email_input">Email</label>
-            <input type="email" class="form-control" id="email_input" ng-model="form.email">
-            <p class="help-block" ng-if="error.email">{{error.email}}</p>
+            <input type="email" class="form-control" name="email" id="email_input" ng-model="form.email" required ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/" ng-blur="emailBlurred = true">
+            <span ng-show="!signupForm.email.$valid && emailBlurred" class="help-block">Invalid email address.</span>
           </div>
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error': !signupForm.password.$valid && passwordBlurred}">
             <label for="password_input">Password</label>
-            <input type="password" class="form-control" id="password_input" ng-model="form.password">
-            <p class="help-block" ng-if="error.password">{{error.password}}</p>
+            <input type="password" class="form-control" name="password" id="password_input" ng-model="form.password" required ng-minlength="6" ng-maxlength="20" ng-blur="passwordBlurred = true">
+            <span ng-show="signupForm.password.$error.required && passwordBlurred" class="help-block">Required.</span>
+            <span ng-show="(signupForm.password.$error.minlength || signupForm.password.$error.maxlength) && passwordBlurred" class="help-block">Your password is 6~20 characters long.</span>
           </div>
-          <div class="form-group">
+          <div class="form-group" ng-class="{'has-error': form.password !== passwordConfirm && passwordConfirmBlurred}">
             <label for="password_input_confirm">Confirm Password</label>
-            <input type="password" class="form-control" id="password_input_confirm" ng-model="passwordConfirm">
-            <p class="help-block" ng-if="error.passwordConfirm">{{error.passwordConfirm}}</p>
+            <input type="password" class="form-control" name="passwordConfirm" id="password_input_confirm" ng-model="passwordConfirm" ng-focus="passwordConfirmFocused = true">
+            <span ng-show="form.password !== passwordConfirm && passwordConfirmFocused" class="help-block">Your passwords don't match.</span>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign up</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" ng-class="{disabled: !signupForm.$valid || form.password !== passwordConfirm}">Sign up</button>
             <a href="javascript:void(0)" class="btn btn-default btn-lg btn-block">Sign in with Google</a>
           </div>
         </form>

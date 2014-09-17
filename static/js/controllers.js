@@ -78,17 +78,14 @@ angular.module('shiverview')
     })
     .success(function (data) {
       $rootScope.$broadcast('setProgress', 100);
-      $scope.path = data.path;
-      if ($scope.path) {
-        $scope.save();
+      if (data.path) {
+        $scope.save({profileimg: data.path});
+        $scope.showProfileImg = true;
       }
     });
   };
-  $scope.save = function () {
-    var payload = {
-      email: $scope.email,
-      profileimg: $scope.path
-    };
+  $scope.save = function (payload, e) {
+    if (e) e.preventDefault();
     user.set(payload)
     .success(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
