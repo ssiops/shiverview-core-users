@@ -35,7 +35,7 @@ angular.module('shiverview')
   }
   $scope.submit = function (e) {
     if (e) e.preventDefault();
-    if (typeof $scope.form.username === 'undefined' || typeof $scope.form.password === 'undefined' || typeof $scope.form.email === 'undefined')
+    if (typeof $scope.form.username === 'undefined' || typeof $scope.form.password === 'undefined' || typeof $scope.form.email === 'undefined' || $scope.nameTaken || $scope.emailTaken)
       return;
     if ($scope.form.password !== $scope.passwordConfirm)
       return $rootScope.$broadcast('warningMessage', 'Your passwords do not match.');
@@ -53,6 +53,21 @@ angular.module('shiverview')
     })
     .error(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    });
+  };
+  $scope.check = function (opt) {
+    var payload = {};
+    if (typeof opt !== 'string' || typeof $scope.form[opt] === 'undefined')
+      return;
+    payload[opt] = $scope.form[opt];
+    $http({
+      url: '/users/check',
+      params: payload,
+      method: 'get'
+    })
+    .success(function (data) {
+      $scope.nameTaken = data.nameTaken;
+      $scope.emailTaken = data.emailTaken;
     });
   };
 }])
@@ -82,6 +97,21 @@ angular.module('shiverview')
         $scope.save({profileimg: data.path});
         $scope.showProfileImg = true;
       }
+    });
+  };
+  $scope.check = function (scope, opt) {
+    var payload = {};
+    if (typeof scope !== 'string' || typeof opt !== 'string' || typeof $scope[scope] === 'undefined' || typeof $scope[scope][opt] === 'undefined')
+      return;
+    payload[opt] = $scope[scope][opt];
+    $http({
+      url: '/users/check',
+      params: payload,
+      method: 'get'
+    })
+    .success(function (data) {
+      $scope.nameTaken = data.nameTaken;
+      $scope.emailTaken = data.emailTaken;
     });
   };
   $scope.save = function (payload, e) {

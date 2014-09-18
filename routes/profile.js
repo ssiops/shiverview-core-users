@@ -145,5 +145,27 @@ module.exports = [
         next(err);
       });
     }
+  },
+  {
+    url: '/check',
+    method: 'get',
+    handler: function (req, res, srv, next) {
+      var query = {};
+      if (typeof req.query.username !== 'undefined')
+        query.name = req.query.username;
+      if (typeof req,query.email !== 'undefined')
+        query.email = req.query.email;
+      srv.db.find(query, 'users', {})
+      .then(function (docs) {
+        var result = {};
+        if (docs.length > 0) {
+          if (typeof req.query.username !== 'undefined')
+            result.nameTaken = true;
+          if (typeof req.query.email !== 'undefined')
+            result.emailTaken = true;
+        }
+        res.send(result);
+      }, function (err) { next(err); });
+    }
   }
 ]

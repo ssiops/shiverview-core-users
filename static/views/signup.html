@@ -6,17 +6,19 @@
     <div class="col-md-5 pull-right">
       <div class="card">
         <form class="card-content" name="signupForm" ng-submit="submit($event)">
-          <div class="form-group" ng-class="{'has-error': !signupForm.username.$valid && usernameBlurred}">
+          <div class="form-group" ng-class="{'has-error': (!signupForm.username.$valid && usernameBlurred) || nameTaken}">
             <label for="username_input">Username</label>
-            <input type="text" class="form-control" name="username" id="username_input" ng-model="form.username" required ng-minlength="2" ng-maxlength="16" ng-pattern="/^[a-zA-Z0-9\-\_\.]/" ng-blur="usernameBlurred = true">
+            <input type="text" class="form-control" name="username" id="username_input" ng-model="form.username" required ng-minlength="2" ng-maxlength="16" ng-pattern="/^[a-zA-Z0-9\-\_\.]/" ng-blur="usernameBlurred=true;infoForm.username.$valid && check('username')">
             <span ng-show="signupForm.username.$error.required && usernameBlurred" class="help-block">Required.</span>
             <span ng-show="signupForm.username.$error.pattern && usernameBlurred" class="help-block">Username should contain only English letters, numbers, "-", "_" and ".".</span>
             <span ng-show="(signupForm.username.$error.minlength || signupForm.username.$error.maxlength) && usernameBlurred" class="help-block">Username is 2~16 characters long.</span>
+            <span ng-show="nameTaken" class="help-block">This name is taken.</span>
           </div>
-          <div class="form-group" ng-class="{'has-error': !signupForm.email.$valid && emailBlurred}">
+          <div class="form-group" ng-class="{'has-error': (!signupForm.email.$valid && emailBlurred) || emailTaken}">
             <label for="email_input">Email</label>
-            <input type="email" class="form-control" name="email" id="email_input" ng-model="form.email" required ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/" ng-blur="emailBlurred = true">
+            <input type="email" class="form-control" name="email" id="email_input" ng-model="form.email" required ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/" ng-blur="emailBlurred=true;infoForm.email.$valid && check('email')">
             <span ng-show="!signupForm.email.$valid && emailBlurred" class="help-block">Invalid email address.</span>
+            <span ng-show="emailTaken" class="help-block">This email is already in use.</span>
           </div>
           <div class="form-group" ng-class="{'has-error': !signupForm.password.$valid && passwordBlurred}">
             <label for="password_input">Password</label>
@@ -30,7 +32,7 @@
             <span ng-show="form.password !== passwordConfirm && passwordConfirmFocused" class="help-block">Your passwords don't match.</span>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg btn-block" ng-class="{disabled: !signupForm.$valid || form.password !== passwordConfirm}">Sign up</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" ng-class="{disabled: !signupForm.$valid || form.password !== passwordConfirm || nameTaken || emailTaken}">Sign up</button>
             <a href="javascript:void(0)" class="btn btn-default btn-lg btn-block">Sign in with Google</a>
           </div>
         </form>

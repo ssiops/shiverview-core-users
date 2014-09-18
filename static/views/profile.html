@@ -18,14 +18,15 @@
     <div class="col-md-4">
       <div class="card">
         <h3 class="cover cover-info">Profile</h3>
-        <form class="card-content" name="infoForm" ng-submit="save(infoPayload, $event)">
+        <form class="card-content" name="infoForm" ng-submit="!emailTaken && save(infoPayload, $event)">
           <div class="form-group" ng-class="{'has-error': !infoForm.email.$valid && emailBlurred}">
             <label for="password_input_old">Email</label>
             <p ng-show="!editEmail">{{user.email}} <button type="button" class="btn btn-link btn-xs" ng-click="editEmail=!editEmail;infoPayload.email=user.email"><span class="glyphicon glyphicon-pencil"></span></button></p>
-            <input type="email" class="form-control" name="email" id="email_input" ng-show="editEmail" ng-model="infoPayload.email" required ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/" ng-blur="emailBlurred = true">
+            <input type="email" class="form-control" name="email" id="email_input" ng-show="editEmail" ng-model="infoPayload.email" required ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/" ng-blur="emailBlurred=true" ng-change="infoForm.email.$valid && check('infoPayload','email')">
             <span ng-show="!infoForm.email.$valid && emailBlurred && editEmail" class="help-block">Invalid email address.</span>
+            <span ng-show="emailTaken && infoPayload.email !== user.email" class="help-block">This email is already in use.</span>
           </div>
-          <p ng-show="editEmail"><button type="submit" class="btn btn-primary" ng-class="{disabled: !infoForm.$valid || infoPayload.email === user.email}">Save</button> <button type="button" class="btn btn-default" ng-click="editEmail=false">Cancel</button></p>
+          <p ng-show="editEmail"><button type="submit" class="btn btn-primary" ng-class="{disabled: !infoForm.$valid || infoPayload.email === user.email || emailTaken}">Save</button> <button type="button" class="btn btn-default" ng-click="editEmail=false">Cancel</button></p>
         </form>
       </div>
     </div>

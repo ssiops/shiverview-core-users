@@ -15,7 +15,25 @@ var app = new App();
 
 App.prototype.init = function (srv, callback) {
   var self = this;
-  srv.db.find({name: 'root', admin: true}, 'users', {limit: 1})
+  if (process.env.verbose) console.log('Checking user indexes.');
+  srv.db.index([
+    {
+      coll: 'users',
+      index: 'name',
+      options: {unique: true}
+    },
+    {
+      coll: 'users',
+      index: 'email',
+      options: {unique: true}
+    }
+  ])
+  .then(function () {
+    if (process.env.verbose) console.log('Checking root account.');
+    return srv.db.find({name: 'root', admin: true}, 'users', {limit: 1});
+  }, function (err) {
+    return callback(err);
+  })
   .then(function (docs) {
     if (docs.length < 1) {
       if (process.env.verbose) console.log('SU not found. A root user will be created.');
