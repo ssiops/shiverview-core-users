@@ -166,5 +166,42 @@ angular.module('shiverview')
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
     });
   };
+}])
+.controller('userOauthCtrl', ['$scope', '$http', '$location', '$routeParams', '$rootScope', function ($scope, $http, $location, $params, $rootScope) {
+  $scope.message = 'Authenticating...';
+  $http({
+    url: '/users/oauth2',
+    method: 'post'
+  })
+  .success(function (res) {
+    if (res && res.newUser) {
+      $scope.message = 'Success!';
+      $scope.oauthSuccess = true;
+    } else {
+      $location.path('/users/profile');
+    }
+  })
+  .error(function (err) {
+    $rootScope.$broadcast('warningMessage', 'Failed to sign in with Google. Please try again.');
+    $location.path('/users/signin');
+  });
+  $scope.submit = function (e) {
+    if (e) e.preventDefault();
+    if (typeof $scope.password === 'undefined')
+      return;
+    if ($scope.password !== $scope.passwordConfirm)
+      return $rootScope.$broadcast('warningMessage', 'Your passwords do not match.');
+    $http({
+      url: '/users/oauth2/profile',
+      method: 'put',
+      data: {password: $scope.password}
+    })
+    .success(function () {
+      $location.url('/users/profile');
+    })
+    .error(function (err) {
+      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    });
+  };
 }]);
 })(window.angular);

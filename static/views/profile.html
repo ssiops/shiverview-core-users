@@ -9,7 +9,7 @@
           <button type="button" class="btn btn-default">Select File</button>
           <input id="file-input" type="file" ng-show="false" ng-file-select="upload($files)">
         </div>
-        <h1>{{user.name}}</h1>
+        <h1>{{user.displayName || user.name}}</h1>
         <h6><a href ng-click="toggleUploader()">Change Profile Image</a></h6>
       </div>
     </div>
@@ -25,6 +25,7 @@
             <input type="email" class="form-control" name="email" id="email_input" ng-show="editEmail" ng-model="infoPayload.email" required ng-pattern="/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/" ng-blur="emailBlurred=true" ng-change="infoForm.email.$valid && check('infoPayload','email')">
             <span ng-show="!infoForm.email.$valid && emailBlurred && editEmail" class="help-block">Invalid email address.</span>
             <span ng-show="emailTaken && infoPayload.email !== user.email" class="help-block">This email is already in use.</span>
+            <span ng-show="editEmail && user.flags.google" class="help-block"><b>WANRING!</b> Your account is assiciated with your Google account. If you change your email, you won't be able to sign in this account with Google again.</span>
           </div>
           <p ng-show="editEmail"><button type="submit" class="btn btn-primary" ng-class="{disabled: !infoForm.$valid || infoPayload.email === user.email || emailTaken}">Save</button> <button type="button" class="btn btn-default" ng-click="editEmail=false">Cancel</button></p>
         </form>

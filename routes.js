@@ -36,11 +36,11 @@ module.exports = [
     url: '/signout',
     method: 'get',
     handler: function (req, res) {
-      delete req.session.user;
-      delete req.session.sudo;
+      req.session.destroy();
       res.send();
     }
   }
 ]
+.concat(require('./routes/oauth.js'))
 .concat(require('./routes/profile.js'))
 .concat(require('./routes/usercontent.js'));

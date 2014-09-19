@@ -1,0 +1,32 @@
+<div class="container top-spaced">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="card center-aligned">
+        <div class="card-content">
+          <div class="oauth-indicator">
+            <div class="loading-spinner large" ng-hide="oauthSuccess || oauthFailure"></div>
+            <div class="oauth-success" ng-show="oauthSuccess"><span class="glyphicon glyphicon-ok"></span></div>
+            <div class="oauth-failure" ng-show="oauthFailure"><span class="glyphicon glyphicon-warning-sign"></span></div>
+          </div>
+          <h3>{{message}}</h3>
+          <form name="oauthSetPassword" ng-submit="submit($event)" ng-show="oauthSuccess">
+            <h3>One more thing...</h3>
+            <p>Please set up your password.</p>
+            <div class="form-group" ng-class="{'has-error': !oauthSetPassword.password.$valid && passwordBlurred}">
+              <input type="password" class="form-control input-lg" name="password" id="password_input" placeholder="Password" ng-model="password" required ng-minlength="6" ng-maxlength="20" ng-blur="passwordBlurred = true">
+              <span ng-show="oauthSetPassword.password.$error.required && passwordBlurred" class="help-block">Required.</span>
+              <span ng-show="(oauthSetPassword.password.$error.minlength || oauthSetPassword.password.$error.maxlength) && passwordBlurred" class="help-block">Your password is 6~20 characters long.</span>
+            </div>
+            <div class="form-group" ng-class="{'has-error': password !== passwordConfirm && passwordConfirmBlurred}">
+              <input type="password" class="form-control input-lg" name="passwordConfirm" id="password_input_confirm" placeholder="Comfirm password" ng-model="passwordConfirm" ng-focus="passwordConfirmFocused = true">
+              <span ng-show="password !== passwordConfirm && passwordConfirmFocused" class="help-block">Your passwords don't match.</span>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-class="{disabled: !oauthSetPassword.$valid || password !== passwordConfirm}">Confirm</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,7 +5,7 @@
   "static": "static",
   "ui": {
     "icon": "favicon.png",
-    "navName": "SV>>USR>",
+    "navName": "User Account",
     "drawerName": "SV>>USR>",
     "index": 1,
     "views": {
@@ -13,6 +13,7 @@
       "/signup": {"scope": "everyone", "title": "Sign up", "url": "/views/signup.html", "ctrl": "userSignupCtrl", "exclusive": true},
       "/profile": {"scope": "users", "title": "Profile", "url": "/views/profile.html", "ctrl": "userProfileCtrl"},
       "/signout": {"scope": "users", "title": "Logout", "url": "/views/signin.html", "ctrl": "userSignoutCtrl"},
+      "/oauth": {"url": "/views/oauth.html", "ctrl": "userOauthCtrl"},
       "/sudo": {"url": "/views/sudo.html", "ctrl": "userSudoCtrl"}
     },
     "position": "right",
