@@ -1,3 +1,5 @@
+var async = require('async');
+var fs = require('fs');
 var User = require('./lib/user.js');
 
 function App() {
@@ -15,6 +17,7 @@ var app = new App();
 
 App.prototype.init = function (srv, callback) {
   var self = this;
+  self.srv = srv;
   if (process.env.verbose) console.log('Checking user indexes.');
   srv.db.index([
     {
@@ -44,6 +47,31 @@ App.prototype.init = function (srv, callback) {
   }, function (err) {
     return callback(err);
   });
-}
+};
+
+App.prototype.finally = function (callback) {
+  var self = this;
+  if (self.srv.config) {
+    if (process.env.verbose) console.log('Configuring OAuth urls.');
+    var oauthurl = 'https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=' +
+      encodeURIComponent(self.srv.config.redirect_uri) +
+      '&response_type=code&access_type=offline&client_id=' +
+      self.srv.config.client_id;
+    var patt = /\/your_oauth_url/g;
+    var toReplace = [process.cwd() + '/static/users/views/signin.html', process.cwd() + '/static/users/views/signup.html'];
+    async.each(toReplace, function (item, callback) {
+      fs.readFile(item, 'utf-8', function (err, content) {
+        if (err) return callback(err);
+        var result = content.replace(patt, oauthurl);
+        fs.writeFile(item, result, 'utf-8', function (err, content) {
+          if (err) return callback(err);
+          else return callback();
+        });
+      });
+    }, function (err) {
+      return callback(err);
+    });
+  } else return callback();
+};
 
 module.exports = app;

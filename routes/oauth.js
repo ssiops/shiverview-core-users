@@ -20,7 +20,7 @@ module.exports = [
     handler: function (req, res, srv, next) {
       if (typeof req.session.code === 'undefined')
         return res.status(404).send();
-      var auth = new OAuth(req.session.code);
+      var auth = new OAuth(req.session.code, srv.config);
       auth.auth()
       .then(function () {
         return auth.get(['emails', 'displayName', 'image']);
