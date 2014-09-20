@@ -87,6 +87,12 @@ module.exports = [
           updates.email = req.body.email;
         if (req.body.profileimg)
           updates.profileimg = req.body.profileimg;
+        if (req.body.displayName)
+          updates.displayName = req.body.displayName;
+        if (typeof req.body.flags === 'object') {
+          for (var f in req.body.flags)
+            updates['flags.' + f] = req.body.flags[f];
+        }
         if (updates.email && !/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/.test(req.body.email))
           d.reject(new srv.err('Your email address is not valid.'));
         else {
@@ -138,8 +144,7 @@ module.exports = [
         srv.db.insert(doc, 'deleted_users', {});
         var log = new srv.log(req, 'User ' + req.session.user.name + ' deleted.', 'USER_DELETED');
         log.store();
-        delete req.session.user;
-        delete req.session.sudo;
+        req.session.destroy();
         res.send();
       }, function (err) {
         next(err);

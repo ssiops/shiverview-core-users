@@ -119,6 +119,7 @@ angular.module('shiverview')
     user.set(payload)
     .success(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
+      $scope.editName = $scope.editEmail = false;
       $rootScope.$broadcast('successMessage', 'Your profile has been saved.');
     })
     .error(function (err) {
