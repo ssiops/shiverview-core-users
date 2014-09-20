@@ -57,7 +57,7 @@ module.exports = [
         if (err) return next(err);
         srv.db.remove({path: path}, 'usercontent', {});
         return res.status(202).send();
-      })
+      });
     }
   }
-]
+];

@@ -13,18 +13,18 @@ module.exports = [
         req.session.user = user;
         if (req.body.sudo) {
           req.session.sudo = new Date().getTime();
-          var log = new srv.log(req, 'User entered sudo mode.', 'AUTH_SUCCESS_SUDO');
-          log.store();
+          var sudoLog = new srv.log(req, 'User entered sudo mode.', 'AUTH_SUCCESS_SUDO');
+          sudoLog.store();
         }
         else {
-          var log = new srv.log(req, 'User sign in.', 'AUTH_SUCCESS');
-          log.store();
+          var successLog = new srv.log(req, 'User sign in.', 'AUTH_SUCCESS');
+          successLog.store();
         }
         return res.send();
       }, function (err) {
         if (err.message === 'Invalid username or password.') {
-          var log = new srv.log(req, 'User auth failed.', 'AUTH_FAIL');
-          log.store();
+          var failureLog = new srv.log(req, 'User auth failed.', 'AUTH_FAIL');
+          failureLog.store();
           return res.send(new srv.err(err));
         } else {
           next(err);

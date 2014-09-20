@@ -4,7 +4,7 @@ angular.module('shiverview')
   var u = user.get();
   if (typeof u !== 'undefined') {
     if (typeof u.then === 'function')
-      u.success(function () { $location.path('/users/profile') });
+      u.success(function () { $location.path('/users/profile'); });
     else
       $location.path('/users/profile');
   }
@@ -29,7 +29,7 @@ angular.module('shiverview')
   var u = user.get();
   if (typeof u !== 'undefined') {
     if (typeof u.then === 'function')
-      u.success(function () { $location.path('/users/profile') });
+      u.success(function () { $location.path('/users/profile'); });
     else
       $location.path('/users/profile');
   }
@@ -77,7 +77,7 @@ angular.module('shiverview')
   if (typeof $scope.user === 'undefined')
     $location.path('/users/signin');
   else if (typeof $scope.user.then === 'function')
-    $scope.user.success(function () { $scope.user = user.get() }).error(function () { $location.path('/users/signin'); });
+    $scope.user.success(function () { $scope.user = user.get(); }).error(function () { $location.path('/users/signin'); });
   $scope.toggleUploader = function () {
     $scope.showProfileImg = !$scope.showProfileImg;
   };

@@ -72,7 +72,7 @@ module.exports = [
           user.auth(srv.db)
           .then(function () {
             srv.db.update({name: req.session.user.name}, {$set: {password: user.hash(req.body.password)}}, 'users', {})
-            .then(function () { d.resolve() }, function (err) { d.reject(err) });
+            .then(function () { d.resolve(); }, function (err) { d.reject(err); });
           }, function (err) {
             d.reject(new srv.err(err));
           });
@@ -106,7 +106,7 @@ module.exports = [
               for (var prop in updates)
                 req.session.user[prop] = updates[prop];
               d.resolve();
-            }, function (err) { d.reject(err) });
+            }, function (err) { d.reject(err); });
           }
         }
         return d.promise;
@@ -116,7 +116,7 @@ module.exports = [
         return updateProfile();
       }, function (err) {
         if (err.message === 'Invalid username or password.') {
-          err.message = 'Invalid old password.'
+          err.message = 'Invalid old password.';
           var log = new srv.log(req, 'User passwords do not match.', 'AUTH_PASSWORD_UNMATCH');
           log.store();
           res.send(err);
@@ -173,4 +173,4 @@ module.exports = [
       }, function (err) { next(err); });
     }
   }
-]
+];

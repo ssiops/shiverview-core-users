@@ -42,7 +42,7 @@ App.prototype.init = function (srv, callback) {
       if (process.env.verbose) console.log('SU not found. A root user will be created.');
       var root = new User({name: 'root', admin: true}, 'shiverview-root');
       root.create(srv.db)
-      .then(function () { callback() }, function (err) { callback(err) });
+      .then(function () { callback(); }, function (err) { callback(err); });
     } else return callback();
   }, function (err) {
     return callback(err);
