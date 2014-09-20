@@ -10,9 +10,9 @@ angular.module('shiverview')
   }
   $scope.submit = function (e) {
     if (e) e.preventDefault();
-    if (typeof $scope.username === 'undefined' || typeof $scope.password === 'undefined')
+    if (typeof $scope.userid === 'undefined' || typeof $scope.password === 'undefined')
       return;
-    user.auth($scope.username, $scope.password)
+    user.auth($scope.userid, $scope.password)
     .success(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
       user.update()

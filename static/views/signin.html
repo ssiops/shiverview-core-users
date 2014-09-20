@@ -4,11 +4,10 @@
       <div class="card">
         <form class="card-content center-aligned" name="signinForm" ng-submit="submit($event)">
           <h1>Sign In</h1>
-          <div class="form-group" ng-class="{'has-error': !signinForm.username.$valid && usernameBlurred}">
-            <input type="text" class="form-control input-lg" name="username" id="username_input" placeholder="Username" ng-model="username" required ng-minlength="2" ng-maxlength="16" ng-pattern="/^[a-zA-Z0-9\-\_\.]/" ng-blur="usernameBlurred = true">
-            <span ng-show="signinForm.username.$error.required && usernameBlurred" class="help-block">Required.</span>
-            <span ng-show="signinForm.username.$error.pattern && usernameBlurred" class="help-block">Your username contains only English letters, numbers, "-", "_" and ".".</span>
-            <span ng-show="(signinForm.username.$error.minlength || signinForm.username.$error.maxlength) && usernameBlurred" class="help-block">Your username is 2~16 characters long.</span>
+          <div class="form-group" ng-class="{'has-error': !signinForm.userid.$valid && userIdBlurred}">
+            <input type="text" class="form-control input-lg" name="userid" id="username_input" placeholder="Username or Email" ng-model="userid" required ng-pattern="/(^[a-zA-Z0-9\-\_\.]{2,16}$)|(^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$)/" ng-blur="userIdBlurred = true">
+            <span ng-show="signinForm.userid.$error.required && userIdBlurred" class="help-block">Required.</span>
+            <span ng-show="signinForm.userid.$error.pattern && userIdBlurred" class="help-block">Please enter a valid user name or email.</span>
           </div>
           <div class="form-group" ng-class="{'has-error': !signinForm.password.$valid && passwordBlurred}">
             <input type="password" class="form-control input-lg" name="password" id="password_input" placeholder="Password" ng-model="password" required ng-minlength="6" ng-maxlength="20" ng-blur="passwordBlurred = true">

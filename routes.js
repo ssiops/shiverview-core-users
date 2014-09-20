@@ -7,7 +7,7 @@ module.exports = [
     url: '/signin',
     method: 'post',
     handler: function (req, res, srv, next) {
-      var user = new User({name: req.body.username}, req.body.password);
+      var user = new User({name: req.body.username, email: req.body.email}, req.body.password);
       user.auth(srv.db)
       .then(function () {
         req.session.user = user;

@@ -81,6 +81,7 @@ module.exports = [
       .then(function () {
         var log = new srv.log(req, 'New user from oauth.', 'USER_NEW');
         log.store();
+        delete user._id;
         delete user.password;
         delete req.session.oauthUser;
         req.session.user = user;
