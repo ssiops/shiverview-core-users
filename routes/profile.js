@@ -158,7 +158,7 @@ module.exports = [
       var query = {};
       if (typeof req.query.username !== 'undefined')
         query.name = req.query.username;
-      if (typeof req,query.email !== 'undefined')
+      if (typeof req.query.email !== 'undefined')
         query.email = req.query.email;
       srv.db.find(query, 'users', {})
       .then(function (docs) {
