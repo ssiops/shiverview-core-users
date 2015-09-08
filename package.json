@@ -18,7 +18,9 @@
   "homepage": "https://github.com/ssiops/shiverview-core-users",
   "dependencies": {
     "async": "^0.9.0",
+    "gm": "^1.18.1",
+    "mkdirp": "^0.5.1",
     "q": "^1.0.1",
-    "request": "^2.44.0"
+    "request": "^2.61.0"
   }
 }

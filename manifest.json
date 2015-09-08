@@ -17,7 +17,7 @@
       "/sudo": {"url": "/views/sudo.html", "ctrl": "userSudoCtrl"}
     },
     "position": "right",
-    "ngmod": ["angularFileUpload"],
+    "ngmod": ["ngFileUpload"],
     "scripts": ["js/controllers.js", "js/service.js"]
   },
   "privileges": {

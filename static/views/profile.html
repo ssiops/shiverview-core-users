@@ -3,11 +3,11 @@
     <div class="col-md-4 col-md-offset-4">
       <div class="card center-aligned">
         <img ng-show="showProfileImg" ng-src="{{user.profileimg || '/users/images/default.svg'}}" class="cover" src="/users/images/default.svg" alt="Your profile image" />
-        <div class="file-drop-zone" ng-show="!showProfileImg" ng-file-drop="upload($files)" ng-file-drag-over-class="active" ng-click="openFileSelect()">
+        <div class="file-drop-zone" ng-show="!showProfileImg" ngf-drop="upload($files)" ngf-pattern="'image/*'" ngf-drag-over-class="active" ng-click="openFileSelect()">
           <h3>Drag a photo here</h3>
           <p>- or -</p>
           <button type="button" class="btn btn-default">Select File</button>
-          <input id="file-input" type="file" ng-show="false" ng-file-select="upload($files)">
+          <input id="file-input" type="file" accept="image/*" ng-show="false" ngf-select="upload($files)">
         </div>
         <h1>{{user.displayName || user.name}}</h1>
         <h4 ng-if="user.displayName">{{user.name}}</h4>
