@@ -9,6 +9,6 @@
   "description": "User module for Project Shiverview.",
   "license": "MIT",
   "dependencies": {
-    "ng-file-upload": "~1.6.0"
+    "ng-file-upload": "~7.0.0"
   }
 }
