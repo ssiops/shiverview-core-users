@@ -12,6 +12,7 @@
       "/signin": {"scope": "everyone", "title": "Sign in", "url": "/views/signin.html", "ctrl": "userSigninCtrl", "exclusive": true},
       "/signup": {"scope": "everyone", "title": "Sign up", "url": "/views/signup.html", "ctrl": "userSignupCtrl", "exclusive": true},
       "/profile": {"scope": "users", "title": "Profile", "url": "/views/profile.html", "ctrl": "userProfileCtrl"},
+      "/content": {"scope": "users", "title": "Usercontent", "url": "/views/usercontent.html", "ctrl": "userContentCtrl"},
       "/signout": {"scope": "users", "title": "Logout", "url": "/views/signin.html", "ctrl": "userSignoutCtrl"},
       "/oauth": {"url": "/views/oauth.html", "ctrl": "userOauthCtrl"},
       "/sudo": {"url": "/views/sudo.html", "ctrl": "userSudoCtrl"}

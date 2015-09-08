@@ -37,6 +37,10 @@
             <span ng-show="emailTaken && infoPayload.email !== user.email" class="help-block">This email is already in use.</span>
             <span ng-show="user.flags.google" class="help-block"><b>WANRING!</b> Your account is assiciated with your Google account. If you change your email, you won't be able to sign in this account with Google again.</span>
           </div>
+          <label>Usercontent</label>
+          <p>
+            <a href="#/users/content">Manage</a>
+          </p>
           <div class="form-group" ng-show="editEmail || editName">
             <button type="submit" class="btn btn-primary" ng-class="{disabled: !infoForm.$valid || (editEmail && (infoPayload.email === user.email || emailTaken))}">Save</button>
             <button type="button" class="btn btn-default" ng-click="editName=false;editEmail=false;infoPayload={}">Cancel</button>

@@ -1,0 +1,27 @@
+<div class="container top-spaced">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <h3 class="cover cover-primary">Usercontent</h3>
+        <div class="card-content">
+          <table class="table table-hover">
+            <thead>
+              <td><a href ng-click="order('file')">Name</a></td>
+              <td><a href ng-click="order('date')">Date</a></td>
+              <td><a href ng-click="order('user')">Uploader</a></td>
+              <td>Actions</td>
+            </thead>
+            <tr ng-repeat="file in list | orderBy:predicate:reverse">
+              <td><a ng-href="{{file.path}}" target="_blank">{{file.file}}</a></td>
+              <td>{{file.date | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+              <td><a ng-href="#/users/{{file.user}}">{{file.user}}</a></td>
+              <td>
+                <button type="button" class="btn btn-danger" ng-click="delete(file.path)">DELETE</button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -71,7 +71,7 @@ angular.module('shiverview')
     });
   };
 }])
-.controller('userProfileCtrl', ['$scope', '$http', '$rootScope', '$location', '$upload', 'user', function ($scope, $http, $rootScope, $location, $upload, user) {
+.controller('userProfileCtrl', ['$scope', '$http', '$rootScope', '$location', 'Upload', 'user', function ($scope, $http, $rootScope, $location, $upload, user) {
   $scope.showProfileImg = true;
   $scope.user = user.get();
   if (typeof $scope.user === 'undefined')
@@ -97,6 +97,10 @@ angular.module('shiverview')
         $scope.save({profileimg: data.path});
         $scope.showProfileImg = true;
       }
+    })
+    .error(function (err) {
+      $rootScope.$broadcast('setProgress', -1);
+      if (err) $rootScope.$broadcast('errorMessage', err.message);
     });
   };
   $scope.check = function (scope, opt) {
@@ -204,5 +208,42 @@ angular.module('shiverview')
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
     });
   };
+}])
+.controller('userContentCtrl', ['$scope', '$http', '$rootScope', 'user', function ($scope, $http, $rootScope, user) {
+  $scope.predicate = 'file';
+  $scope.reverse = false;
+  $scope.order = function (predicate) {
+    $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+    $scope.predicate = predicate;
+  };
+  $scope.get = function () {
+    $http({
+      url: '/users/usercontent/list',
+      method: 'get'
+    })
+    .success(function (data) {
+      $scope.list = data;
+    })
+    .error(function (err) {
+      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    });
+  };
+  $scope.delete = function (path) {
+    $http({
+      url: '/users' + path,
+      method: 'delete'
+    })
+    .success(function () {
+      $scope.get();
+      $rootScope.$broadcast('successMessage', 'Successfully deleted \'' + path + '\'');
+    })
+    .error(function (err) {
+      if (err && err.message === 'Sudo required.')
+        user.sudo();
+      else
+        $rootScope.$broadcast('errorMessage', err.message);
+    });
+  };
+  $scope.get();
 }]);
 })(window.angular);
