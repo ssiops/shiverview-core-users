@@ -207,6 +207,7 @@ angular.module('shiverview')
 .controller('userContentCtrl', ['$scope', '$http', '$rootScope', 'user', function ($scope, $http, $rootScope, user) {
   $scope.predicate = 'file';
   $scope.reverse = false;
+  $scope.templateUrl = 'profilePopover.html';
   $scope.order = function (predicate) {
     $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
     $scope.predicate = predicate;
@@ -237,6 +238,14 @@ angular.module('shiverview')
         user.sudo();
       else
         $rootScope.$broadcast('errorMessage', err.message);
+    });
+  };
+  $scope.query = function (file) {
+    if (file.cached) return;
+    user.query(file.user).success(function (data) {
+      file.username = data.displayName;
+      file.userimg = data.profileimg;
+      file.cached = true;
     });
   };
   $scope.get();

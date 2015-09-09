@@ -78,6 +78,12 @@ angular.module('shiverview')
       var redirect = $location.path();
       $location.path('/users/sudo');
       $location.search('redirect', redirect);
+    },
+    query: function (name) {
+      return $http({
+        url: '/users/profile/' + name,
+        method: 'get'
+      });
     }
   };
   return service;

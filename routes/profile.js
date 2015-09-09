@@ -21,7 +21,7 @@ module.exports = [
         if (docs.length < 1)
           return res.status(404).send();
         else
-          return res.send({name: docs[0].name, imgurl: docs[0].profileimg});
+          return res.send({name: docs[0].name, displayName: docs[0].displayName, profileimg: docs[0].profileimg});
       });
     }
   },
