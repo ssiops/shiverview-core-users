@@ -1,6 +1,6 @@
 {
   "name": "shiverview-core-users",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "User module for Project Shiverview.",
   "main": "index.js",
   "scripts": {
@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/ssiops/shiverview-core-users",
   "dependencies": {
-    "async": "^0.9.0",
+    "async": "^1.4.2",
     "gm": "^1.18.1",
     "mkdirp": "^0.5.1",
-    "q": "^1.0.1",
+    "q": "^1.4.1",
     "request": "^2.61.0"
   }
 }
