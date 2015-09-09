@@ -81,12 +81,12 @@ angular.module('shiverview')
   $scope.toggleUploader = function () {
     $scope.showProfileImg = !$scope.showProfileImg;
   };
-  $scope.upload = function ($files) {
+  $scope.upload = function ($file) {
     $scope.progress = 0;
     $rootScope.$broadcast('setProgress', 0);
-    $scope.upload = $upload.upload({
+    var upload = $upload.upload({
       url: '/users/usercontent/profile/img',
-      file: $files[0]
+      file: $file
     })
     .progress(function (e) {
       $rootScope.$broadcast('setProgress', parseInt(100.0 * e.loaded / e.total));
@@ -129,11 +129,6 @@ angular.module('shiverview')
     .error(function (err) {
       if (err) return $rootScope.$broadcast('errorMessage', err.message);
     });
-  };
-  $scope.openFileSelect = function () {
-    var input = document.getElementById('file-input');
-    var event = new MouseEvent('click', {'view': window, 'bubbles': true, 'calcelable': true});
-    input.dispatchEvent(event);
   };
   $scope.deleteAccount = function (e) {
     if (e) e.preventDefault();
