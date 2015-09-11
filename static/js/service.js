@@ -18,10 +18,11 @@ angular.module('shiverview')
         data: opt,
         method: 'post'
       })
-      .success(function () {
+      .then(function (res) {
         for (var prop in opt)
           if (opt[prop] !== 'undefined')
             user[prop] = opt[prop];
+        return res;
       });
     },
     auth: function (id, password, sudo) {
@@ -38,8 +39,9 @@ angular.module('shiverview')
         data: payload,
         method: 'post'
       })
-      .success(function () {
+      .then(function (res) {
         $rootScope.$broadcast('userStatusUpdate');
+        return res;
       });
     },
     update: function () {
@@ -47,31 +49,34 @@ angular.module('shiverview')
         url: '/users/profile',
         method: 'get'
       })
-      .success(function (u) {
+      .then(function (res) {
         init = true;
-        user = u;
+        user = res.data;
         $rootScope.$broadcast('userStatusUpdate');
-      })
-      .error(function (err, status) {
+        return res;
+      }, function (res) {
         init = true;
-        if (status === 404) {
+        if (res.status === 404) {
           user = undefined;
           $rootScope.$broadcast('userStatusUpdate');
         }
+        return res;
       });
     },
     signout: function () {
       user = undefined;
       return $http({url: '/users/signout', method: 'get'})
-      .success(function () {
+      .then(function (res) {
         $rootScope.$broadcast('userStatusUpdate');
+        return res;
       });
     },
     delete: function (name) {
       return $http({url: '/users/profile/' + name, method: 'delete'})
-      .success(function () {
+      .then(function (res) {
         user = undefined;
         $rootScope.$broadcast('userStatusUpdate');
+        return res;
       });
     },
     sudo: function () {

@@ -4,7 +4,7 @@ angular.module('shiverview')
   var u = user.get();
   if (typeof u !== 'undefined') {
     if (typeof u.then === 'function')
-      u.success(function () { $location.path('/users/profile'); });
+      u.then(function () { $location.path('/users/profile'); });
     else
       $location.path('/users/profile');
   }
@@ -13,15 +13,14 @@ angular.module('shiverview')
     if (typeof $scope.userid === 'undefined' || typeof $scope.password === 'undefined')
       return;
     user.auth($scope.userid, $scope.password)
-    .success(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    .then(function (res) {
+      if (res.data.message) return $rootScope.$broadcast('errorMessage', res.data.message);
       user.update()
-      .success(function (err) {
+      .then(function () {
         $location.url('/users/profile');
       });
-    })
-    .error(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    }, function (res) {
+      $rootScope.$broadcast('errorMessage', res.data.message);
     });
   };
 }])
@@ -29,7 +28,7 @@ angular.module('shiverview')
   var u = user.get();
   if (typeof u !== 'undefined') {
     if (typeof u.then === 'function')
-      u.success(function () { $location.path('/users/profile'); });
+      u.then(function () { $location.path('/users/profile'); });
     else
       $location.path('/users/profile');
   }
@@ -44,15 +43,14 @@ angular.module('shiverview')
       data: $scope.form,
       method: 'put'
     })
-    .success(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    .then(function (res) {
+      if (res.data.message) return $rootScope.$broadcast('errorMessage', res.data.message.message);
       user.update()
-      .success(function (err) {
+      .then(function () {
         $location.url('/users/profile');
       });
-    })
-    .error(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    }, function (res) {
+      $rootScope.$broadcast('errorMessage', res.data.message);
     });
   };
   $scope.check = function (opt) {
@@ -65,9 +63,9 @@ angular.module('shiverview')
       params: payload,
       method: 'get'
     })
-    .success(function (data) {
-      $scope.nameTaken = data.nameTaken;
-      $scope.emailTaken = data.emailTaken;
+    .then(function (res) {
+      $scope.nameTaken = res.data.nameTaken;
+      $scope.emailTaken = res.data.emailTaken;
     });
   };
 }])
@@ -77,7 +75,7 @@ angular.module('shiverview')
   if (typeof $scope.user === 'undefined')
     $location.path('/users/signin');
   else if (typeof $scope.user.then === 'function')
-    $scope.user.success(function () { $scope.user = user.get(); }).error(function () { $location.path('/users/signin'); });
+    $scope.user.then(function () { $scope.user = user.get(); }, function () { $location.path('/users/signin'); });
   $scope.toggleUploader = function () {
     $scope.showProfileImg = !$scope.showProfileImg;
   };
@@ -100,7 +98,7 @@ angular.module('shiverview')
     })
     .error(function (err) {
       $rootScope.$broadcast('setProgress', -1);
-      if (err) $rootScope.$broadcast('errorMessage', err.message);
+      $rootScope.$broadcast('errorMessage', err.message);
     });
   };
   $scope.check = function (scope, opt) {
@@ -113,34 +111,32 @@ angular.module('shiverview')
       params: payload,
       method: 'get'
     })
-    .success(function (data) {
-      $scope.nameTaken = data.nameTaken;
-      $scope.emailTaken = data.emailTaken;
+    .then(function (res) {
+      $scope.nameTaken = res.data.nameTaken;
+      $scope.emailTaken = res.data.emailTaken;
     });
   };
   $scope.save = function (payload, e) {
     if (e) e.preventDefault();
     user.set(payload)
-    .success(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    .then(function (res) {
+      if (res.data.message) return $rootScope.$broadcast('errorMessage', res.data.message);
       $scope.editName = $scope.editEmail = false;
       $rootScope.$broadcast('successMessage', 'Your profile has been saved.');
-    })
-    .error(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    }, function (res) {
+      $rootScope.$broadcast('errorMessage', res.data.message);
     });
   };
   $scope.deleteAccount = function (e) {
     if (e) e.preventDefault();
     user.delete($scope.delPayload.username)
-    .success(function () {
+    .then(function () {
       $location.path('/');
-    })
-    .error(function (err) {
-      if (err && err.message === 'Sudo required.')
+    }, function (res) {
+      if (res.data.message === 'Sudo required.')
         user.sudo();
       else
-        $rootScope.$broadcast('errorMessage', err.message);
+        $rootScope.$broadcast('errorMessage', res.data.message);
     });
   };
 }])
@@ -155,15 +151,14 @@ angular.module('shiverview')
   $scope.submit = function (e) {
     if (e) e.preventDefault();
     user.auth($scope.user.name, $scope.password, true)
-    .success(function () {
+    .then(function () {
       $rootScope.$broadcast('warningMessage', 'You entered sudo mode.');
       if ($params.redirect)
         $location.url($params.redirect);
       else
         $location.url('/users/profile');
-    })
-    .error(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    }, function (res) {
+      $rootScope.$broadcast('errorMessage', res.data.message);
     });
   };
 }])
@@ -173,15 +168,14 @@ angular.module('shiverview')
     url: '/users/oauth2',
     method: 'post'
   })
-  .success(function (res) {
-    if (res && res.newUser) {
+  .then(function (res) {
+    if (res.data && res.data.newUser) {
       $scope.message = 'Success!';
       $scope.oauthSuccess = true;
     } else {
       $location.path('/users/profile');
     }
-  })
-  .error(function (err) {
+  }, function () {
     $rootScope.$broadcast('warningMessage', 'Failed to sign in with Google. Please try again.');
     $location.path('/users/signin');
   });
@@ -196,11 +190,10 @@ angular.module('shiverview')
       method: 'put',
       data: {password: $scope.password}
     })
-    .success(function () {
+    .then(function () {
       $location.url('/users/profile');
-    })
-    .error(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    }, function (res) {
+      $rootScope.$broadcast('errorMessage', res.data.message);
     });
   };
 }])
@@ -217,11 +210,10 @@ angular.module('shiverview')
       url: '/users/usercontent/list',
       method: 'get'
     })
-    .success(function (data) {
-      $scope.list = data;
-    })
-    .error(function (err) {
-      if (err) return $rootScope.$broadcast('errorMessage', err.message);
+    .then(function (res) {
+      $scope.list = res.data;
+    }, function (res) {
+      $rootScope.$broadcast('errorMessage', res.data.message);
     });
   };
   $scope.delete = function (path) {
@@ -229,22 +221,21 @@ angular.module('shiverview')
       url: '/users' + path,
       method: 'delete'
     })
-    .success(function () {
+    .then(function () {
       $scope.get();
       $rootScope.$broadcast('successMessage', 'Successfully deleted \'' + path + '\'');
-    })
-    .error(function (err) {
-      if (err && err.message === 'Sudo required.')
+    }, function (res) {
+      if (res.data.message === 'Sudo required.')
         user.sudo();
       else
-        $rootScope.$broadcast('errorMessage', err.message);
+        $rootScope.$broadcast('errorMessage', res.data.message);
     });
   };
   $scope.query = function (file) {
     if (file.cached) return;
-    user.query(file.user).success(function (data) {
-      file.username = data.displayName;
-      file.userimg = data.profileimg;
+    user.query(file.user).then(function (res) {
+      file.username = res.data.displayName;
+      file.userimg = res.data.profileimg;
       file.cached = true;
     });
   };
