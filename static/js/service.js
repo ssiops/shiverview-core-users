@@ -1,8 +1,9 @@
 (function (angular) {
 angular.module('shiverview')
-.factory('user', ['$http', '$rootScope', '$location', function ($http, $rootScope, $location) {
+.factory('user', ['$http', '$rootScope', '$location', '$q', function ($http, $rootScope, $location, $q) {
   var user;
   var init = false;
+  var cache = {};
   var service = {
     get: function () {
       if (init)
@@ -85,10 +86,19 @@ angular.module('shiverview')
       $location.search('redirect', redirect);
     },
     query: function (name) {
-      return $http({
-        url: '/users/profile/' + name,
-        method: 'get'
-      });
+      if (cache[name]) {
+        return $q(function (resolve, reject) {
+          resolve({data: cache[name]});
+        });
+      } else {
+        return $http({
+          url: '/users/profile/' + name,
+          method: 'get'
+        }).then(function (res) {
+          cache[name] = res.data;
+          return res;
+        });
+      }
     }
   };
   return service;
