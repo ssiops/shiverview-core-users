@@ -54,3 +54,11 @@ Config.json in stardshard should be configured with API keys, client id, client 
 * Server uses access token to get user info, like email, etc.
 * Server looks up user database to find the user and add to req.session.user, if not found, add a new one
 * oauthcallback complete, client can redirect to original page. If a new user was created, the user will be prompted to set a password.
+
+## Using [bcyrpt](https://www.npmjs.com/package/bcrypt)
+
+You can enable bcyrpt for safer password storing. To do so, run `npm install bcrypt` in the shiverview directory. This module will always use bcrypt when it's available, instead of sha256 hashing.
+
+For more information about bcrypt, visit https://www.npmjs.com/package/bcrypt
+
+Note: old user passwords hashed with sha256 are not compatible with bcrypt.
