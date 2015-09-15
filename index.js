@@ -19,6 +19,14 @@ var app = new App();
 App.prototype.init = function (srv, callback) {
   var self = this;
   self.srv = srv;
+  if (process.env.verbose) console.log('Checking bcrypt support.');
+  try {
+    require('bcrypt');
+    if (process.env.verbose) console.log('Bcrypt enabled.');
+  }
+  catch (e) {
+    if (process.env.verbose) console.log('Bcrypt disabled.');
+  }
   if (process.env.verbose) console.log('Checking user indexes.');
   srv.db.index([
     {
